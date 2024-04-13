@@ -15,4 +15,3 @@
 ## Przykłady
 
 > ![Wizualizacja grafu](image.png)
-> Wizualizacja grafu
