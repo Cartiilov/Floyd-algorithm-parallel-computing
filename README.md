@@ -8,7 +8,18 @@
 
 ## Struktura plików
 
-- `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
+Floyd-algorithm-parallel-computing│
+├── src/
+│   ├── `mpi_floyd.c`
+│   ├── `read_and_distribute_matrix.c`
+│   └── `utilities.c`
+│
+├── include/
+│   ├── `read_and_distribute_matrix.c`
+│   └── `utilities.h`
+│
+├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
+└── `Makefile`
 
 ## Dane
 
