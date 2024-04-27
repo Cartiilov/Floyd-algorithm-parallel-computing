@@ -8,6 +8,7 @@
 
 ## Struktura plików
 
+```bash
 Floyd-algorithm-parallel-computing│
 ├── src/
 │   ├── `mpi_floyd.c`
@@ -20,6 +21,7 @@ Floyd-algorithm-parallel-computing│
 │
 ├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
 └── `Makefile`
+```
 
 ## Dane
 
