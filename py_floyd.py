@@ -29,7 +29,8 @@ def save_matrix_to_file(A, filepath="./matrix_diff.txt"):
 
 def save_path_to_file(path, filepath="./path_diff.txt"):
     with open(filepath,"w") as f:
-        f.writelines(path)
+        for p in path:
+            f.write(f'{p} ')
 
 def construct_path(prev, u,v):
     if prev[u, v] == -1:
