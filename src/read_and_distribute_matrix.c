@@ -12,7 +12,8 @@ inline int owner(int j, int p, int nrows)
     return (p * (j + 1) - 1)/nrows;
 }
 
-void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **matrix_storage, MPI_Datatype dtype, int *nrows, int *ncols, int *errval, MPI_Comm comm) {
+void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **matrix_storage, MPI_Datatype dtype, int *nrows, int *ncols, int *errval, MPI_Comm comm)
+{
 
     int id;
     int p;
@@ -24,7 +25,8 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
     const int MSG_TAG = 1;
 
     MPI_Initialized(&mpi_initialized);
-    if (!mpi_initialized) {
+    if (!mpi_initialized) 
+    {
         *errval = -1;
         return;
     }
@@ -33,18 +35,21 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
     MPI_Comm_rank(comm, &id);
 
     element_size = get_size(dtype);
-    if (element_size <= 0) {
+    if (element_size <= 0) 
+    {
         *errval = -1;
         return;
     }
 
-    if (p - 1 == id) {
+    if (p - 1 == id)
+    {
         file = fopen(filename, "r");
         if (NULL == file) {
             *nrows = 0;
             *ncols = 0;
         }
-        else {
+        else
+        {
             fread(nrows, sizeof(int), 1, file);
             fread(ncols, sizeof(int), 1, file);
         }
@@ -52,7 +57,8 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
 
     MPI_Bcast(nrows, 1, MPI_INT, p - 1, comm);
 
-    if (0 == *nrows) {
+    if (0 == *nrows)
+    {
         *errval = -1;
         return;
     }
@@ -63,17 +69,20 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
 
     alloc_matrix(nlocal_rows, *ncols, element_size, matrix_storage, matrix, errval);
 
-    if (SUCCESS != *errval) {
+    if (SUCCESS != *errval)
+    {
         MPI_Abort(comm, *errval);
     }
 
-    if (p - 1 == id) {
+    if (p - 1 == id)
+    {
         int nrows_to_send;
         int num_elements;
         size_t nelements_read;
         int i;
 
-        for (i = 0; i < p - 1; i++) {
+        for (i = 0; i < p - 1; i++)
+        {
             nrows_to_send = number_of_rows(i, *nrows, p);
             num_elements = nrows_to_send * (*ncols);
             nelements_read = fread(*matrix_storage, element_size,
@@ -93,7 +102,8 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
 
         fclose(file);
     }
-    else {
+    else
+    {
         MPI_Recv(*matrix_storage, nlocal_rows * (*ncols),
                  dtype, p - 1, MSG_TAG, comm, &status);
     }
@@ -102,8 +112,10 @@ void read_and_distribute_matrix_byrows(char *filename, void ***matrix, void **ma
 void print_matrix(void **matrix, int nrows, int ncols, MPI_Datatype dtype, FILE *stream) {
     int i, j;
 
-    for (i = 0; i < nrows; i++) {
-        for (j = 0; j < ncols; j++) {
+    for (i = 0; i < nrows; i++)
+    {
+        for (j = 0; j < ncols; j++)
+        {
             if (dtype == MPI_DOUBLE)
                 fprintf(stream, "%6.3f ", ((double **)matrix)[i][j]);
             else if (dtype == MPI_FLOAT)
@@ -115,7 +127,8 @@ void print_matrix(void **matrix, int nrows, int ncols, MPI_Datatype dtype, FILE 
     }
 }
 
-void collect_and_print_matrix(void **matrix, MPI_Datatype dtype, int nrows, int ncols, MPI_Comm comm) {
+void collect_and_print_matrix(void **matrix, MPI_Datatype dtype, int nrows, int ncols, MPI_Comm comm)
+{
 
     int id;
     int p;
@@ -133,11 +146,13 @@ void collect_and_print_matrix(void **matrix, MPI_Datatype dtype, int nrows, int 
 
     nlocal_rows = number_of_rows(id, nrows, p);
 
-    if (0 == id) {
+    if (0 == id)
+    {
         int i;
 
         print_matrix(matrix, nlocal_rows, ncols, dtype, stdout);
-        if (p > 1) {
+        if (p > 1)
+        {
             element_size = get_size(dtype);
             max_num_rows = number_of_rows(p - 1, nrows, p);
 
@@ -165,7 +180,8 @@ void collect_and_print_matrix(void **matrix, MPI_Datatype dtype, int nrows, int 
         }
         fprintf(stdout, "\n");
     }
-    else {
+    else
+    {
         MPI_Recv(&prompt, 1, MPI_INT, 0, PROMPT_MSG, comm, &status);
         MPI_Send(*matrix, nlocal_rows * ncols, dtype, 0, RESPONSE_MSG, comm);
     }

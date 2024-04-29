@@ -9,7 +9,8 @@ typedef int Element_type;
 
 void compute_shortest_paths(int id, int p, Element_type **a, int n, MPI_Comm comm);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     Element_type **adjmatrix;
     Element_type *matrix_storage;
     int id;
@@ -26,7 +27,8 @@ int main(int argc, char *argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &id);
     MPI_Comm_size(MPI_COMM_WORLD, &p);
 
-    if (argc < 2) {
+    if (argc < 2)
+    {
         sprintf(errstring, "Usage: %s filename, where filename contains binary adjacency matrix\n", argv[0]);
         terminate(id, errstring);
     }
@@ -37,11 +39,13 @@ int main(int argc, char *argv[]) {
                                       MPI_TYPE, &nrows, &ncols, &error,
                                       MPI_COMM_WORLD);
 
-    if (SUCCESS != error) {
+    if (SUCCESS != error)
+    {
         terminate(id, "Error reading or allocating matrix.\n");
     }
 
-    if (nrows != ncols) {
+    if (nrows != ncols)
+    {
         terminate(id, "Error: matrix is not square.\n");
     }
 
@@ -65,7 +69,7 @@ int main(int argc, char *argv[]) {
         printf("Floyd, matrix size %d, %d processes. Elapsed time %6.4f seconds, Total time %6.4f seconds\n",
                ncols, p, max_time, total_time);
 
-    collect_and_print_matrix((void **)adjmatrix, MPI_TYPE, nrows, ncols,
+    collect_and_print_matrix((void**)adjmatrix, MPI_TYPE, nrows, ncols,
                              MPI_COMM_WORLD);
 
     MPI_Finalize();
@@ -73,7 +77,8 @@ int main(int argc, char *argv[]) {
 }
 
 
-void compute_shortest_paths(int id, int p, Element_type **a, int n, MPI_Comm comm) {
+void compute_shortest_paths(int id, int p, Element_type **a, int n, MPI_Comm comm)
+{
     int i, j, k;
     int local_index;
     int root;
@@ -82,10 +87,12 @@ void compute_shortest_paths(int id, int p, Element_type **a, int n, MPI_Comm com
 
     tmp = (Element_type *)malloc(n * sizeof(Element_type));
 
-    for (k = 0; k < n; k++) {
+    for (k = 0; k < n; k++)
+    {
         root = owner(k, p, n);
 
-        if (root == id) {
+        if (root == id)
+        {
             local_index = k - (id * n) / p;
 
             for (j = 0; j < n; j++)
