@@ -31,7 +31,19 @@ int ** generate_random_graph(int rows)
     {
         for (int j = 0; j < rows; j++)
         {
-            graph[i][j] = (rand() % (NUM_UPPER - NUM_LOWER) + NUM_LOWER) % 3 == 0;
+            graph[i][j] = (rand() % (NUM_UPPER - NUM_LOWER) + NUM_LOWER) % 3 == 0; 
+            // chodziło ci o uzyskanie prawdopodobenstwa 2:1 istnienia połączenia?
+
+            if (graph[i][j] == 1)
+            {
+                graph[i][j] = (rand() % 100) + 1;
+            }
+            else
+            {
+                graph[i][j] == 1000000;
+            }
+            
+            graph[i][i] == 1000000;
         }
         graph[i][i] = 0;
     }
@@ -39,7 +51,8 @@ int ** generate_random_graph(int rows)
     return graph;
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
     srand(time(NULL));
     int** graph = generate_random_graph(GRAPH_SIZE);
     node_positions** nodes;
@@ -55,9 +68,12 @@ int main(int argc, char *argv[]){
 
     MPE_Open_graphics(&handle, world, NULL, -1, -1, WINDOW_WIDTH, WINDOW_HEIGHT, 1);
     int nodes_num = GRAPH_SIZE;
-    if(myid == 0){
-        for(int i = 0;i<nodes_num;i++){
-            for(int j = 0;j<GRAPH_SIZE;j++){
+    if(myid == 0)
+    {
+        for(int i = 0;i<nodes_num;i++)
+        {
+            for(int j = 0;j<GRAPH_SIZE;j++)
+            {
                 printf("%d ", graph[i][j]);
             }
             printf("\n");
@@ -70,7 +86,8 @@ int main(int argc, char *argv[]){
 
         nodes = (node_positions **)calloc(nodes_num, sizeof(*nodes));
 
-        for(int i = 0;i<nodes_num;i++){
+        for(int i = 0;i<nodes_num;i++)
+        {
             node_positions * node = (node_positions *)malloc(sizeof(node_positions));
             node->x = circle_x + floor(radius*cos(angle * i * M_PI/180.0));
             node->y = circle_y + floor(radius*sin(angle * i * M_PI/180.0));
@@ -85,11 +102,15 @@ int main(int argc, char *argv[]){
 
     }
 
-    if(myid == 0){
+    if(myid == 0)
+    {
 
-        for(int i = 0;i<nodes_num;i++){
-            for(int j = 0;j<GRAPH_SIZE;j++){
-                if(graph[i][j] == 1){
+        for(int i = 0;i<nodes_num;i++)
+        {
+            for(int j = 0;j<GRAPH_SIZE;j++)
+            {
+                if(graph[i][j] == 1)
+                {
                     printf("Line between [%d](%d, %d) and [%d](%d, %d)\n", i, nodes[i]->x, nodes[i]->y, j, nodes[j]->x, nodes[j]->y);
                     MPE_Draw_line(handle, nodes[i]->x, nodes[i]->y, nodes[j]->x, nodes[j]->y, MPE_BLACK);
                     MPE_Draw_line(handle, nodes[j]->x, nodes[j]->y, nodes[j]->x - 3, nodes[j]->y + 5, MPE_BLACK);
@@ -100,7 +121,8 @@ int main(int argc, char *argv[]){
 
         MPE_Update(handle);
 
-        for(int i = 0;i<nodes_num;i++){
+        for(int i = 0;i<nodes_num;i++)
+        {
             free(nodes[i]);
         }
         free(nodes);
