@@ -19,6 +19,18 @@ def matrix_to_edge_list(matrix):
 
     return edge_list
 
+def save_matrix_to_file(A, filepath="./matrix_diff.txt"):
+    with open(filepath,"w") as f:
+        for i in range(len(A)):
+            s = ""
+            for j in range(len(A[i])):
+                s+=f'{A[i,j]},'
+            f.writelines(f'{s[:-1]}\n')
+
+def save_path_to_file(path, filepath="./path_diff.txt"):
+    with open(filepath,"w") as f:
+        f.writelines(path)
+
 def construct_path(prev, u,v):
     if prev[u, v] == -1:
         return []
@@ -40,6 +52,7 @@ if __name__ == "__main__":
 
     for i in range(n):
         prev[i,i] = i + 1
+
     for k in range(0, n):
         for i in range(0, n):
             for j in range(0, n):
@@ -47,6 +60,7 @@ if __name__ == "__main__":
                     A[i, j] = A[i, k] + A[k, j]
                     prev[i, j] = prev[k, j]
 
-    print(A)
-    print(construct_path(prev, 0, 2))
-    pass
+    save_matrix_to_file(A)
+    save_path_to_file(construct_path(prev, 0, 2))
+
+
