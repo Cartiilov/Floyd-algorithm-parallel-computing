@@ -7,7 +7,6 @@
 #define DATA_MSG           0
 #define PROMPT_MSG         1
 #define RESPONSE_MSG       2
-#define SIZE 6
 
 int lb(int id, int p, int n){  
    return ((id)*(n)/(p));
@@ -32,10 +31,7 @@ void print_matrix (int **a, int r, int c)
    }
 }
 
-void print_sub_row_matrix (
-   void **a,          
-   int m,              
-   int n)      
+void print_sub_row_matrix (void **a, int m, int n)      
 {
    MPI_Status  status;          
    void       *bstorage;       
@@ -81,16 +77,11 @@ void print_sub_row_matrix (
    }
 }
 
-void read_row_striped_matrix (
-   char        *s,        
-   void      ***subs,     
-   void       **storage,  
-   int         *m,        
-   int         *n)     
+void read_row_striped_matrix (char *s, void ***subs, void **storage, int *m,        
+   int *n, int size)     
 {
    int          i;
    int          id;           
-   FILE        *infileptr;    
    int          local_rows;   
    void       **lptr;         
    int          p;            
@@ -99,21 +90,21 @@ void read_row_striped_matrix (
    int          x;            
    int** globalArray = NULL; 
 
-   *n = SIZE;
-   *m = SIZE;
+   *n = size;
+   *m = size;
    MPI_Comm_size (MPI_COMM_WORLD, &p);
    MPI_Comm_rank (MPI_COMM_WORLD, &id);
    if (id == (p-1)) {
-      int *g = (int *)malloc(SIZE * SIZE * sizeof(int));
-      globalArray = (int **)malloc(SIZE * sizeof(int *));
-      for (int i = 0; i < SIZE; i++)
+      int *g = (int *)malloc(size * size * sizeof(int));
+      globalArray = (int **)malloc(size * sizeof(int *));
+      for (int i = 0; i < size; i++)
       {
-         globalArray[i] = &g[i * SIZE];
+         globalArray[i] = &g[i * size];
       }
 
       FILE * fi = fopen(s, "r");
-      for(int i = 0;i<SIZE;i++){
-         for(int j = 0;j<SIZE;j++){
+      for(int i = 0;i<size;i++){
+         for(int j = 0;j<size;j++){
                fscanf(fi, "%d", &globalArray[i][j]);
          }
       }
@@ -185,20 +176,28 @@ int main (int argc, char *argv[]) {
    int     m;         
    int     n;         
    int     p;         
+   int size;
 
 
    MPI_Init (&argc, &argv);
    MPI_Comm_rank (MPI_COMM_WORLD, &id);
    MPI_Comm_size (MPI_COMM_WORLD, &p);
 
-   if(p > SIZE){
+   if(p > size){
       printf("Number of nodes greater than number of matrix rows - terminating");
       MPI_Abort(MPI_COMM_WORLD, -1);
+      MPI_Finalize();
+      return -1;
+   }else if(argc < 3){
+      printf("Insufficient number of command-line arguments - terminating");
+      MPI_Abort(MPI_COMM_WORLD, -1);
+      MPI_Finalize();
       return -1;
    }
    
-   read_row_striped_matrix (argv[1], (void *) &a,
-      (void *) &storage, &m, &n);
+   size = atoi(argv[1]);
+   read_row_striped_matrix (argv[2], (void *) &a,
+      (void *) &storage, &m, &n, size);
 
    MPI_Barrier (MPI_COMM_WORLD);
    compute_shortest_paths (id, p, (int **) a, n);
