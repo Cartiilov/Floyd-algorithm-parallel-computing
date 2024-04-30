@@ -148,6 +148,18 @@ void read_row_striped_matrix (char *s, void ***subs, void **storage, int *m,
 void compute_shortest_paths (int id, int p, int **a, int n)
 {   
    int * tmp = (int *) malloc (n * sizeof(int));
+   int pred[n][n];
+
+   for (int i = 0; i < n; i++)
+   {
+      for (int j = 0; j < n; j++)
+      {
+         pred[i][j] = i;
+      }
+      pred[i][i] = i;
+   }
+
+
    for (int k = 0; k < n; k++) {
       int root = tpn(k,p,n);
       if (root == id) {
@@ -163,10 +175,46 @@ void compute_shortest_paths (int id, int p, int **a, int n)
          for (int j = 0; j < n; j++){
             if(a[i][j] > a[i][k] + tmp[j]){
                a[i][j] = a[i][k]+tmp[j];
+               pred[i][j] = pred[k][j];
             }
          }
    }
-   free (tmp);
+   free(tmp);
+
+
+      int source, target, k;
+      int path[n];
+      for (int z = 0; z < n; ++z)
+      {
+         path[z] = 0;
+      }
+
+      for (int i = 0; i < n; ++i)
+      {
+         for (int j =0; j < i; ++j)
+         {
+            source = i;
+            target = j;
+
+            k = 0;
+            while (source != target)
+            {
+               target = pred[source][target];
+               path[k] = target;
+               k++;
+            }
+            printf("%d -> %d: ", source, target);
+            printf("%d ", target);
+            for (int z = n - 1; z >= 0; --z)
+            {
+               if (path[z] != 0)
+                  printf("%d ", path[z]);
+                  path[z] = 0;
+            }
+            printf("\n");
+         }
+      }
+      printf("\n");
 }
 
 int main (int argc, char *argv[]) {
@@ -183,6 +231,7 @@ int main (int argc, char *argv[]) {
    MPI_Comm_rank (MPI_COMM_WORLD, &id);
    MPI_Comm_size (MPI_COMM_WORLD, &p);
 
+   size = atoi(argv[1]);
    if(p > size){
       printf("Number of nodes greater than number of matrix rows - terminating");
       MPI_Abort(MPI_COMM_WORLD, -1);
@@ -194,8 +243,7 @@ int main (int argc, char *argv[]) {
       MPI_Finalize();
       return -1;
    }
-   
-   size = atoi(argv[1]);
+
    read_row_striped_matrix (argv[2], (void *) &a,
       (void *) &storage, &m, &n, size);
 

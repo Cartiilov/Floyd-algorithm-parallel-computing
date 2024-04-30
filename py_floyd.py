@@ -3,7 +3,7 @@ import numpy as np
 
 def read_matrix_from_file(filepath="./matrix.txt"):
     with open(filepath, "r") as f:
-        all_lines = [list(map(int, a.replace('\n', '').split(',')))
+        all_lines = [list(map(int, a.replace('\n', '').split(' ')))
                      for a in f.readlines()]
         return all_lines
     
@@ -63,5 +63,8 @@ if __name__ == "__main__":
 
     save_matrix_to_file(A)
     save_path_to_file(construct_path(prev, 0, 2))
+    for i in range(n):
+        for j in range(i):
+            print(f'{i} -> {j} {construct_path(prev, i, j)}')
 
 
