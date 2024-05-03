@@ -32,7 +32,6 @@ int ** generate_random_graph(int rows)
         for (int j = 0; j < rows; j++)
         {
             graph[i][j] = (rand() % (NUM_UPPER - NUM_LOWER) + NUM_LOWER) % 3 == 0; 
-            // chodziło ci o uzyskanie prawdopodobenstwa 2:1 istnienia połączenia?
 
             if (graph[i][j] == 1)
             {

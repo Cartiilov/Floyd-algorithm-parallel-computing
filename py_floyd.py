@@ -1,9 +1,9 @@
 import numpy as np
 
 
-def read_matrix_from_file(filepath="./matrix.txt"):
+def read_matrix_from_file(filepath="./matrix_diff.txt"):
     with open(filepath, "r") as f:
-        all_lines = [list(map(int, a.replace('\n', '').split(',')))
+        all_lines = [list(map(int, a.replace('\n', '').split(' ')))
                      for a in f.readlines()]
         return all_lines
     
@@ -63,5 +63,7 @@ if __name__ == "__main__":
 
     save_matrix_to_file(A)
     save_path_to_file(construct_path(prev, 0, 2))
+
+
 
 
