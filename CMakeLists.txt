@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(FloydProject)
 
 execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/load_settings.sh)
@@ -25,3 +25,12 @@ target_link_libraries(graph_viz mpe)
 target_link_libraries(graph_viz X11)
 
 set(CMAKE_C_COMPILER mpicc)
+
+option(test "test the corectness of Floyd's algorithm" OFF)
+
+if(test)
+    add_custom_target(RunPythonScript ALL
+        COMMAND python3 ${CMAKE_SOURCE_DIR}/compare.py
+        COMMENT "Running the testing"
+    )
+endif()

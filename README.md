@@ -14,13 +14,15 @@ Floyd-algorithm-parallel-computing│
 ├── src/
 │   ├── `floyd.c`
 │   ├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
-│   ├── `vis.c`
 │   └── `main.c`
 │
 ├── include/
 │   └── `floyd.h`
 │
 ├── `CMakeLists.txt`
+├── data/
+│   ├── source/
+│   └── result/
 └── build/
 ```
 
@@ -34,9 +36,15 @@ A następnie
 make
 ```
 
-Przykładowe wywołanie programu na trzech node 
+Abu uruchomić program należy przejść do folderu build i wykonać kolejno komendy
 ```bash
-mpiexec -f nodes -n 3 ./floyd 5 matrix_diff.txt
+cmake ..
+make
+```
+
+Wywołanie programu na przykładowych danych na 3 node (z folderu build)
+```bash
+mpiexec -f ../nodes -n 3 ./floyd 5 ../matrix_diff.txt
 ```
 Plikowi wykonywalnemu (tutaj ./floyd) należy dostarczyć dwóch parametrów wejściowych: pierwszym argumentem jest rozmiar macierzy sąsiedztwa definującej graf, a drugim nazwa pliku źródłowego, w którym ta macierz się znajduje.
 
