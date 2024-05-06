@@ -9,7 +9,6 @@
 
 ## Struktura plików
 
-Do zmiany
 ```bash
 Floyd-algorithm-parallel-computing│
 ├── src/
@@ -37,9 +36,9 @@ make
 
 Przykładowe wywołanie programu na trzech node 
 ```bash
-mpiexec -f nodes -n 3 ./myprogram 5 matrix_diff.txt
+mpiexec -f nodes -n 3 ./floyd 5 matrix_diff.txt
 ```
-Plikowi wykonywalnemu (tutaj ./myprogram) należy dostarczyć dwóch parametrów wejściowych: pierwszym argumentem jest rozmiar macierzy sąsiedztwa definującej graf, a drugim nazwa pliku źródłowego, w którym ta macierz się znajduje.
+Plikowi wykonywalnemu (tutaj ./floyd) należy dostarczyć dwóch parametrów wejściowych: pierwszym argumentem jest rozmiar macierzy sąsiedztwa definującej graf, a drugim nazwa pliku źródłowego, w którym ta macierz się znajduje.
 
 ## Przykłady
 
