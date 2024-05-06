@@ -27,6 +27,7 @@ Floyd-algorithm-parallel-computing│
 ```
 
 ## Instrukcja obsługi
+
 Aby program zadziałał należy przejść do folderu build i wykonać komendę:
 ```bash
 cmake ..
@@ -47,6 +48,17 @@ Wywołanie programu na przykładowych danych na 3 node (z folderu build)
 mpiexec -f ../nodes -n 3 ./floyd 5 ../matrix_diff.txt
 ```
 Plikowi wykonywalnemu (tutaj ./floyd) należy dostarczyć dwóch parametrów wejściowych: pierwszym argumentem jest rozmiar macierzy sąsiedztwa definującej graf, a drugim nazwa pliku źródłowego, w którym ta macierz się znajduje.
+
+Możliwe jest również przetestowanie poprawności działania programu poprzez dodanie do komendy cmake flagi
+
+```bash
+cmake -Dtest=ON ..
+```
+a następnie wykonanie testowania:
+
+```bash
+make
+```
 
 ## Przykłady
 

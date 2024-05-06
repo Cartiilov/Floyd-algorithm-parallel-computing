@@ -1,6 +1,3 @@
-source /opt/nfs/config/source_mpich420.sh
-source /opt/nfs/config/source_cuda121.sh
-
 touch ../nodes
 
 chmod 664 ../nodes

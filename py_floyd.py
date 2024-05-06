@@ -4,7 +4,7 @@ import os
 
 
 def read_matrix_from_file(filename):
-    filepath = "./data/source/" + filename + ".txt"
+    filepath = "../data/source/" + filename + ".txt"
     with open(filepath, "r") as f:
         all_lines = [list(map(int, a.replace('\n', '').split(' ')))
                      for a in f.readlines()]
@@ -23,7 +23,7 @@ def matrix_to_edge_list(matrix):
     return edge_list
 
 def save_matrix_to_file(A, filename):
-    filepath = "./data/result/" + filename + "_py.txt"
+    filepath = "../data/result/" + filename + "_py.txt"
     if not os.path.exists(filepath):
         open(filepath, 'w')
 
@@ -34,7 +34,7 @@ def save_matrix_to_file(A, filename):
                 s+=f'{A[i,j]} '
             f.writelines(f'{s[:-1]}\n')
 
-def save_path_to_file(path, filepath="./path_diff.txt"):
+def save_path_to_file(path, filepath="../path_diff.txt"):
     with open(filepath,"w") as f:
         for p in path:
             f.write(f'{p} ')
@@ -71,10 +71,10 @@ if __name__ == "__main__":
                 if A[i, j] > A[i, k] + A[k, j]:
                     A[i, j] = A[i, k] + A[k, j]
                     prev[i, j] = prev[k, j]
-    print(A)
+    # print(A)
 
     save_matrix_to_file(A, filename)
-    save_path_to_file(construct_path(prev, 0, 2))
+    # save_path_to_file(construct_path(prev, 0, 2))
 
 
 
