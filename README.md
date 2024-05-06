@@ -13,16 +13,16 @@ Do zmiany
 ```bash
 Floyd-algorithm-parallel-computing│
 ├── src/
-│   ├── `mpi_floyd.c`
-│   ├── `read_and_distribute_matrix.c`
-│   └── `utilities.c`
+│   ├── `floyd.c`
+│   ├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
+│   ├── `vis.c`
+│   └── `main.c`
 │
 ├── include/
-│   ├── `read_and_distribute_matrix.c`
-│   └── `utilities.h`
+│   └── `floyd.h`
 │
-├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
-└── `Makefile`
+├── `CMakeLists.txt`
+└── build/
 ```
 
 ## Instrukcja obsługi
