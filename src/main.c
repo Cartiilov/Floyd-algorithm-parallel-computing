@@ -5,8 +5,8 @@
 
 
 int main(int argc, char *argv[]) {
-    int** a;
-    int* storage;
+    int** M;
+    int* storg;
     int id;
     int m;
     int n;
@@ -30,12 +30,12 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    read_row_striped_matrix(argv[2], (void *)&a, (void *)&storage, &m, &n, size);
+    distribute_matrix(argv[2], (void *)&M, (void *)&storg, &m, &n, size);
 
     MPI_Barrier(MPI_COMM_WORLD);
-    compute_shortest_paths(id, p, (int **)a, n);
+    floyd(id, p, (int **)M, n);
 
-    print_sub_row_matrix((void **)a, m, n);
+    assemble_and_print_matrix((void **)M, m, n);
 
     MPI_Finalize();
     return 0;

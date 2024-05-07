@@ -28,15 +28,6 @@ Floyd-algorithm-parallel-computing│
 
 ## Instrukcja obsługi
 
-Aby program zadziałał należy przejść do folderu build i wykonać komendę:
-```bash
-cmake ..
-```
-A następnie
-```bash
-make
-```
-
 Abu uruchomić program należy przejść do folderu build i wykonać kolejno komendy
 ```bash
 cmake ..

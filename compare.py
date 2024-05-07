@@ -2,12 +2,7 @@ import subprocess
 import os
 import random
 
-print("I was executed!")
-
 def remove_whitespace(text, n):
-    # lines = text.split("\n")
-    # processed_lines = lines[:n]  # Keep only the first n lines
-    # return "\n".join(processed_lines)
     return ''.join(text.split())
 
 def compare_files_in_result_folder(name, n):
