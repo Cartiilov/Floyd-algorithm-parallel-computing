@@ -15,37 +15,29 @@ typedef struct node_pos node_positions;
 
 #define WINDOW_WIDTH 300
 #define WINDOW_HEIGHT 300
-#define GRAPH_SIZE 5
+#define GRAPH_SIZE 6
 #define NUM_UPPER 10
 #define NUM_LOWER 1
 
-int ** generate_random_graph(int rows)
-{
+int **read_graph_from_file(int rows, const char *filename) {
     int **graph = (int **)malloc(rows * sizeof(int *));
-    for (int i = 0; i < rows; i++)
-    {
+    for (int i = 0; i < rows; i++) {
         graph[i] = (int *)malloc(rows * sizeof(int));
     }
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < rows; j++)
-        {
-            graph[i][j] = (rand() % (NUM_UPPER - NUM_LOWER) + NUM_LOWER) % 3 == 0; 
-
-            if (graph[i][j] == 1)
-            {
-                graph[i][j] = (rand() % 100) + 1;
-            }
-            else
-            {
-                graph[i][j] == 1000000;
-            }
-            
-            graph[i][i] == 1000000;
-        }
-        graph[i][i] = 0;
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("An error while opening file occured\n");
+        exit(1);
     }
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < rows; j++) {
+            fscanf(file, "%d", &graph[i][j]);
+        }
+    }
+
+    fclose(file);
 
     return graph;
 }
@@ -53,7 +45,7 @@ int ** generate_random_graph(int rows)
 int main(int argc, char *argv[])
 {
     srand(time(NULL));
-    int** graph = generate_random_graph(GRAPH_SIZE);
+    int** graph = read_graph_from_file(GRAPH_SIZE, argv[1]);
     node_positions** nodes;
     int numprocs, myid;
     MPI_Comm world;
@@ -108,7 +100,7 @@ int main(int argc, char *argv[])
         {
             for(int j = 0;j<GRAPH_SIZE;j++)
             {
-                if(graph[i][j] == 1)
+                if(graph[i][j] != 1000000 && graph[i][j] > 0)
                 {
                     printf("Line between [%d](%d, %d) and [%d](%d, %d)\n", i, nodes[i]->x, nodes[i]->y, j, nodes[j]->x, nodes[j]->y);
                     MPE_Draw_line(handle, nodes[i]->x, nodes[i]->y, nodes[j]->x, nodes[j]->y, MPE_BLACK);
@@ -134,7 +126,7 @@ int main(int argc, char *argv[])
     {
         free(graph[k]);
     }
-
+    int c = getchar();
     free(graph);
     return 0;
 }
