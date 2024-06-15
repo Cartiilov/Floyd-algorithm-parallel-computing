@@ -22,11 +22,11 @@ def compare_files_in_result_folder(name, n):
 
 def execute_mpi_c_program(name, n, k):
     k = min(n, k)
-    mpi_command = ['mpiexec', '-f', '../nodes', '-n', str(k), './floyd', str(n), '../data/source/' + name + '.txt']
+    upc_command = ['upcrun', '-shared-heap', '256M', '-c', '1', '-N', str(n), '-n', str(n), './upc_floyd', '../data/source/' + name + '.txt', '0']
     output_directory = '../data/result'
     output_file_path = os.path.join(output_directory, name + '.txt')
     with open(output_file_path, 'w') as output_file:
-        process = subprocess.Popen(mpi_command, stdout=output_file, stderr=subprocess.PIPE)
+        process = subprocess.Popen(upc_command, stdout=output_file, stderr=subprocess.PIPE)
         process.wait()
         if process.returncode != 0:
             print("Error executing MPI C program:", process.stderr.read().decode())
