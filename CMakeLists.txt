@@ -1,27 +1,22 @@
 cmake_minimum_required(VERSION 3.5)
-project(FloydProject)
+project(UPCFloydProject)
 
-execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/load_settings.sh)
+set(PTHREADS_COUNT 4 CACHE STRING "Number of pthreads")
 
-include_directories(include)
+set(SOURCE_FILE ../src/upc_floyd.c)
 
-add_executable(floyd src/main.c src/floyd.c)
+set(OUTPUT_BINARY floyd)
 
+add_custom_command(
+    OUTPUT ${OUTPUT_BINARY}
+    COMMAND upcc -bupc -Wc,"-O2" -network=udp -pthreads=${PTHREADS_COUNT} ${SOURCE_FILE} -o ${OUTPUT_BINARY}
+    DEPENDS ${SOURCE_FILE}
+    COMMENT "Compiling ${SOURCE_FILE} with UPC"
+)
 
+add_custom_target(
+    compile_floyd ALL
+    DEPENDS ${OUTPUT_BINARY}
+)
 
-find_package(MPI REQUIRED)
-target_link_libraries(floyd MPI::MPI_C)
-
-
-target_link_libraries(floyd m)
-
-set(CMAKE_C_COMPILER mpicc)
-
-option(test "test the corectness of Floyd's algorithm" OFF)
-
-if(test)
-    add_custom_target(RunPythonScript ALL
-        COMMAND python3 ${CMAKE_SOURCE_DIR}/compare.py
-        COMMENT "Running the testing"
-    )
-endif()
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${OUTPUT_BINARY})

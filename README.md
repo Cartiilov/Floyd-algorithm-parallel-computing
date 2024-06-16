@@ -5,24 +5,13 @@
 - [Struktura plików](#struktura-plików)
 - [Dane](#dane)
 - [Instrukcja obsługi](#instrukcja-obsługi)
-- [Przykłady](#przykłady)
 
 ## Struktura plików
 
 ```bash
 Floyd-algorithm-parallel-computing│
 ├── src/
-│   ├── `floyd.c`
-│   ├── `graph_viz.c` - podstawowy przykład z kodem wizualizującym graf przy pomocy MPI oraz MPE_graphics
-│   └── `main.c`
-│
-├── include/
-│   └── `floyd.h`
-│
-├── `CMakeLists.txt`
-├── data/
-│   ├── source/
-│   └── result/
+│   └── `upc_floyd.c`
 └── build/
 ```
 
@@ -34,23 +23,17 @@ cmake ..
 make
 ```
 
+Lub cmake z dodatkowym argumentem
+```bash
+cmake PTHREADS_COUNT=n ..
+```
+Przyjmując n jako liczbę watków, która nie może być większa niż liczba kolumn w macierzy reprezentującej graf.
+
 Wywołanie programu na przykładowych danych na 3 node (z folderu build)
 ```bash
-mpiexec -f ../nodes -n 3 ./floyd 5 ../matrix_diff.txt
-```
-Plikowi wykonywalnemu (tutaj ./floyd) należy dostarczyć dwóch parametrów wejściowych: pierwszym argumentem jest rozmiar macierzy sąsiedztwa definującej graf, a drugim nazwa pliku źródłowego, w którym ta macierz się znajduje.
-
-Możliwe jest również przetestowanie poprawności działania programu poprzez dodanie do komendy cmake flagi
-
-```bash
-cmake -Dtest=ON ..
-```
-a następnie wykonanie testowania:
-
-```bash
-make
+UPC_NODEFILE=../nodes upcrun -shared-heap 256M -c 1 -N 4 -n 4 
+./floyd 5 ../matrix.txt ../file.txt
 ```
 
-## Przykłady
+przy czym wartości po flagach -n i -N muszą zgadzać się z wartością wyżej wspomnianego PTHREADSCOUNT. Należy również podać 3 argumenty po pliku wykonywalnym, pierwszym bedzie liczba kolumn w macierzy, na której program będzie pracował, drugim plik zawierający jej definicję a trzecim plik, w którym znajdą się ewentualne błędy programu.
 
-> ![Wizualizacja grafu](image.png)
