@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(UPCFloydProject)
 
-set(PTHREADS_COUNT 4 CACHE STRING "Number of pthreads")
+set(PTHREADS_COUNT 1 CACHE STRING "Number of pthreads")
 
 set(SOURCE_FILE ../src/upc_floyd.c)
 
